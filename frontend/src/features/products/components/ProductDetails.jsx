@@ -205,7 +205,7 @@ export const ProductDetails = () => {
                             {
                                 product && product.images.map((image,index)=>(
                                     <motion.div  whileHover={{scale:1.1}} whileTap={{scale:1}} style={{width:"200px",cursor:"pointer"}} onClick={()=>setSelectedImageIndex(index)}>
-                                        <img style={{width:"100%",objectFit:"contain"}} src={image} alt={`${product.title} image`} />
+                                        <img style={{width:"100%",objectFit:"contain", borderRadius:"10px"}} src={image} alt={`${product.title} image`} />
                                     </motion.div>
                                 ))
                             }
@@ -223,7 +223,7 @@ export const ProductDetails = () => {
                                             {
                                             Math.abs(activeStep - index) <= 2 
                                                 ?
-                                                <Box component="img" sx={{width:'100%',objectFit:"contain",overflow:"hidden",aspectRatio:1/1}} src={image} alt={product?.title} />
+                                                <Box component="img" sx={{width:'100%',objectFit:"contain",overflow:"hidden"}} src={image} alt={product?.title} />
                                                 :
                                                 null
                                             }
@@ -235,9 +235,9 @@ export const ProductDetails = () => {
                                     <MobileStepper steps={maxSteps} position="static" activeStep={activeStep} nextButton={<Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1} >Next{theme.direction === 'rtl' ? (<KeyboardArrowLeft />) : (<KeyboardArrowRight />)}</Button>} backButton={<Button size="small" onClick={handleBack} disabled={activeStep === 0}>{theme.direction === 'rtl' ? (<KeyboardArrowRight />) : (<KeyboardArrowLeft />)}Back</Button>}/>
                                 </Stack>
                                 :
-                                <div style={{width:"100%"}}>
-                                    <img style={{width:"100%",objectFit:"contain",aspectRatio:1/1}} src={product?.images[selectedImageIndex]} alt={`${product?.title} image`} />
-                                </div>
+                                <motion.div whileHover={{scale:1.1}} whileTap={{scale:1}} style={{width:"100%", marginLeft:"20px"}}>
+                                    <img style={{width:"75%",objectFit:"contain",backgroundColor:"", borderRadius:"20px"}} src={product?.images[selectedImageIndex]} alt={`${product?.title} image`} />
+                                </motion.div>
                             }
                         </Stack>
 
@@ -260,7 +260,7 @@ export const ProductDetails = () => {
                             </Stack>
 
                             {/* price */}
-                            <Typography variant='h5'>${product?.price}</Typography>
+                            <Typography variant='h5'>{product?.price} Rs</Typography>
                         </Stack>
 
                         {/* description */}
@@ -278,32 +278,10 @@ export const ProductDetails = () => {
                         <Stack sx={{rowGap:"1.3rem"}} width={'fit-content'}>
 
                             {/* colors */}
-                            <Stack flexDirection={'row'} alignItems={'center'} columnGap={is387?'5px':'1rem'} width={'fit-content'}>
-                                <Typography>Colors: </Typography>
-                                <Stack flexDirection={'row'} columnGap={is387?".5rem":".2rem"} >
-                                    {
-                                        COLORS.map((color,index)=>(
-                                            <div style={{backgroundColor:"white",border:selectedColorIndex===index?`1px solid ${theme.palette.primary.dark}`:"",width:is340?"40px":"50px",height:is340?"40px":"50px",display:"flex",justifyContent:"center",alignItems:"center",borderRadius:"100%",}}>
-                                                <div onClick={()=>setSelectedColorIndex(index)} style={{width:"40px",height:"40px",border:color==='#F6F6F6'?"1px solid grayText":"",backgroundColor:color,borderRadius:"100%"}}></div>
-                                            </div>
-                                        ))
-                                    }
-                                </Stack>
-                            </Stack>
+                          
                             
                             {/* size */}
-                            <Stack flexDirection={'row'} alignItems={'center'} columnGap={is387?'5px':'1rem'} width={'fit-content'}>
-                                <Typography>Size: </Typography>
-                                <Stack flexDirection={'row'} columnGap={is387?".5rem":"1rem"}>
-                                    {
-                                        SIZES.map((size)=>(
-                                            <motion.div onClick={()=>handleSizeSelect(size)} whileHover={{scale:1.050}} whileTap={{scale:1}} style={{border:selectedSize===size?'':"1px solid grayText",borderRadius:"8px",width:"30px",height:"30px",display:"flex",justifyContent:"center",alignItems:"center",cursor:"pointer",padding:"1.2rem",backgroundColor:selectedSize===size?"#DB4444":"whitesmoke",color:selectedSize===size?"white":""}}>
-                                                <p>{size}</p>
-                                            </motion.div>
-                                        ))
-                                    }
-                                </Stack>
-                            </Stack>
+                          
 
                             {/* quantity , add to cart and wishlist */}
                             <Stack flexDirection={"row"} columnGap={is387?".3rem":"1.5rem"} width={'100%'} >
@@ -312,9 +290,9 @@ export const ProductDetails = () => {
                                 <Stack flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                                     
                                     <MotionConfig whileHover={{scale:1.050}} whileTap={{scale:1}}>
-                                        <motion.button onClick={handleDecreaseQty}  style={{padding:"10px 15px",fontSize:"1.050rem",backgroundColor:"",color:"black",outline:"none",border:'1px solid black',borderRadius:"8px"}}>-</motion.button>
+                                        <motion.button onClick={handleDecreaseQty}  style={{padding:"10px 15px",fontSize:"1.050rem",backgroundColor:"white",color:"black",outline:"none",border:'1px solid black',borderRadius:"8px"}}>-</motion.button>
                                         <p style={{margin:"0 1rem",fontSize:"1.1rem",fontWeight:'400'}}>{quantity}</p>
-                                        <motion.button onClick={handleIncreaseQty} style={{padding:"10px 15px",fontSize:"1.050rem",backgroundColor:"black",color:"white",outline:"none",border:'none',borderRadius:"8px"}}>+</motion.button>
+                                        <motion.button onClick={handleIncreaseQty} style={{padding:"10px 15px",fontSize:"1.050rem",backgroundColor:"red",color:"white",outline:"none",border:'none',borderRadius:"8px"}}>+</motion.button>
                                     </MotionConfig>
 
                                 </Stack>
@@ -322,7 +300,7 @@ export const ProductDetails = () => {
                                 {/* add to cart */}
                                 {
                                     isProductAlreadyInCart?
-                                    <button style={{padding:"10px 15px",fontSize:"1.050rem",backgroundColor:"black",color:"white",outline:"none",border:'none',borderRadius:"8px"}}>In Cart</button>
+                                    <button style={{padding:"10px 15px",fontSize:"1.050rem",backgroundColor:"#14d42e",color:"white",outline:"none",border:'none',borderRadius:"8px"}}>In Cart</button>
                                     :<motion.button whileHover={{scale:1.050}} whileTap={{scale:1}} onClick={handleAddToCart} style={{padding:"10px 15px",fontSize:"1.050rem",backgroundColor:"black",color:"white",outline:"none",border:'none',borderRadius:"8px"}}>Add To Cart</motion.button>
                                 }
 
