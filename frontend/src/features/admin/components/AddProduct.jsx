@@ -1,148 +1,198 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate} from 'react-router-dom'
-import { addProductAsync, resetProductAddStatus, selectProductAddStatus,updateProductByIdAsync } from '../../products/ProductSlice'
-import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
-import { useForm } from "react-hook-form"
-import { selectBrands } from '../../brands/BrandSlice'
-import { selectCategories } from '../../categories/CategoriesSlice'
-import { toast } from 'react-toastify'
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { addProductAsync, resetProductAddStatus, selectProductAddStatus } from '../../products/ProductSlice';
+import { useForm } from "react-hook-form";
+import { selectBrands } from '../../brands/BrandSlice';
+import { selectCategories } from '../../categories/CategoriesSlice';
+import { toast } from 'react-toastify';
 
 export const AddProduct = () => {
 
-    const {register,handleSubmit,reset,formState: { errors }} = useForm()
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const dispatch = useDispatch();
+    const brands = useSelector(selectBrands);
+    const categories = useSelector(selectCategories);
+    const productAddStatus = useSelector(selectProductAddStatus);
+    const navigate = useNavigate();
 
-    const dispatch=useDispatch()
-    const brands=useSelector(selectBrands)
-    const categories=useSelector(selectCategories)
-    const productAddStatus=useSelector(selectProductAddStatus)
-    const navigate=useNavigate()
-    const theme=useTheme()
-    const is1100=useMediaQuery(theme.breakpoints.down(1100))
-    const is480=useMediaQuery(theme.breakpoints.down(480))
-
-    useEffect(()=>{
-        if(productAddStatus==='fullfilled'){
-            reset()
-            toast.success("New product added")
-            navigate("/admin/dashboard")
+    useEffect(() => {
+        if (productAddStatus === 'fullfilled') {
+            reset();
+            toast.success("New product added");
+            navigate("/admin/dashboard");
+        } else if (productAddStatus === 'rejected') {
+            toast.error("Error adding product, please try again later");
         }
-        else if(productAddStatus==='rejected'){
-            toast.error("Error adding product, please try again later")
-        }
-    },[productAddStatus])
+    }, [productAddStatus]);
 
-    useEffect(()=>{
-        return ()=>{
-            dispatch(resetProductAddStatus())
-        }
-    },[])
+    useEffect(() => {
+        return () => {
+            dispatch(resetProductAddStatus());
+        };
+    }, []);
 
-    const handleAddProduct=(data)=>{
-        const newProduct={...data,images:[data.image0,data.image1,data.image2,data.image3]}
-        delete newProduct.image0
-        delete newProduct.image1
-        delete newProduct.image2
-        delete newProduct.image3
-
-        dispatch(addProductAsync(newProduct))
-    }
-
-    
-  return (
-    <Stack p={'0 16px'} justifyContent={'center'} alignItems={'center'} flexDirection={'row'} >
+    const handleAddProduct = (data) => {
+        const formData = new FormData();
+        formData.append('title', data.title);
+        formData.append('brand', data.brand);
+        formData.append('category', data.category);
+        formData.append('description', data.description);
+        formData.append('price', data.price);
+        formData.append('discountPercentage', data.discountPercentage);
+        formData.append('stockQuantity', data.stockQuantity);
         
+        // Append the file fields for thumbnail and images
+        formData.append('thumbnail', data.thumbnail[0]); // get first selected file
+        formData.append('image0', data.image0[0]);
+        formData.append('image1', data.image1[0]);
+        formData.append('image2', data.image2[0]);
+        formData.append('image3', data.image3[0]);
 
-        <Stack width={is1100?"100%":"60rem"} rowGap={4} mt={is480?4:6} mb={6} component={'form'} noValidate onSubmit={handleSubmit(handleAddProduct)}> 
-            
-            {/* feild area */}
-            <Stack rowGap={3}>
-                <Stack>
-                    <Typography variant='h6' fontWeight={400} gutterBottom>Title</Typography>
-                    <TextField {...register("title",{required:'Title is required'})}/>
-                </Stack> 
+        dispatch(addProductAsync(formData));
+    };
 
-                <Stack flexDirection={'row'} >
+    return (
+        <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+            <form
+                onSubmit={handleSubmit(handleAddProduct)}
+                className="bg-white p-8 rounded-lg shadow-lg max-w-2xl w-full space-y-6"
+            >
+                {/* Title */}
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Title</label>
+                    <input
+                        {...register("title", { required: 'Title is required' })}
+                        className={`border ${errors.title ? 'border-red-500' : 'border-gray-300'} w-full px-3 py-2 rounded-lg`}
+                    />
+                    {errors.title && <p className="text-red-500 text-xs italic">{errors.title.message}</p>}
+                </div>
 
-                    <FormControl fullWidth>
-                        <InputLabel id="brand-selection">Brand</InputLabel>
-                        <Select {...register("brand",{required:"Brand is required"})} labelId="brand-selection" label="Brand">
-                            
-                            {
-                                brands.map((brand)=>(
-                                    <MenuItem value={brand._id}>{brand.name}</MenuItem>
-                                ))
-                            }
+                {/* Brand and Category */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Brand</label>
+                        <select
+                            {...register("brand", { required: 'Brand is required' })}
+                            className={`border ${errors.brand ? 'border-red-500' : 'border-gray-300'} w-full px-3 py-2 rounded-lg`}
+                        >
+                            <option value="">Select a brand</option>
+                            {brands.map((brand) => (
+                                <option key={brand._id} value={brand._id}>{brand.name}</option>
+                            ))}
+                        </select>
+                        {errors.brand && <p className="text-red-500 text-xs italic">{errors.brand.message}</p>}
+                    </div>
 
-                        </Select>
-                    </FormControl>
+                    <div>
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Category</label>
+                        <select
+                            {...register("category", { required: 'Category is required' })}
+                            className={`border ${errors.category ? 'border-red-500' : 'border-gray-300'} w-full px-3 py-2 rounded-lg`}
+                        >
+                            <option value="">Select a category</option>
+                            {categories.map((category) => (
+                                <option key={category._id} value={category._id}>{category.name}</option>
+                            ))}
+                        </select>
+                        {errors.category && <p className="text-red-500 text-xs italic">{errors.category.message}</p>}
+                    </div>
+                </div>
 
+                {/* Description */}
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                    <textarea
+                        {...register("description", { required: 'Description is required' })}
+                        rows={4}
+                        className={`border ${errors.description ? 'border-red-500' : 'border-gray-300'} w-full px-3 py-2 rounded-lg`}
+                    />
+                    {errors.description && <p className="text-red-500 text-xs italic">{errors.description.message}</p>}
+                </div>
 
-                    <FormControl fullWidth>
-                        <InputLabel id="category-selection">Category</InputLabel>
-                        <Select {...register("category",{required:"category is required"})} labelId="category-selection" label="Category">
-                            
-                            {
-                                categories.map((category)=>(
-                                    <MenuItem value={category._id}>{category.name}</MenuItem>
-                                ))
-                            }
+                {/* Price and Discount */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Price</label>
+                        <input
+                            type="number"
+                            {...register("price", { required: 'Price is required' })}
+                            className={`border ${errors.price ? 'border-red-500' : 'border-gray-300'} w-full px-3 py-2 rounded-lg`}
+                        />
+                        {errors.price && <p className="text-red-500 text-xs italic">{errors.price.message}</p>}
+                    </div>
 
-                        </Select>
-                    </FormControl>
+                    <div>
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Discount Percentage</label>
+                        <input
+                            type="number"
+                            {...register("discountPercentage", { required: 'Discount Percentage is required' })}
+                            className={`border ${errors.discountPercentage ? 'border-red-500' : 'border-gray-300'} w-full px-3 py-2 rounded-lg`}
+                        />
+                        {errors.discountPercentage && <p className="text-red-500 text-xs italic">{errors.discountPercentage.message}</p>}
+                    </div>
+                </div>
 
-                </Stack>
+                {/* Stock Quantity */}
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Stock Quantity</label>
+                    <input
+                        type="number"
+                        {...register("stockQuantity", { required: 'Stock Quantity is required' })}
+                        className={`border ${errors.stockQuantity ? 'border-red-500' : 'border-gray-300'} w-full px-3 py-2 rounded-lg`}
+                    />
+                    {errors.stockQuantity && <p className="text-red-500 text-xs italic">{errors.stockQuantity.message}</p>}
+                </div>
 
+                {/* Thumbnail Upload */}
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Thumbnail</label>
+                    <input
+                        type="file"
+                        {...register("thumbnail", { required: 'Thumbnail is required' })}
+                        className={`border ${errors.thumbnail ? 'border-red-500' : 'border-gray-300'} w-full px-3 py-2 rounded-lg`}
+                        accept="image/*"
+                    />
+                    {errors.thumbnail && <p className="text-red-500 text-xs italic">{errors.thumbnail.message}</p>}
+                </div>
 
-                <Stack>
-                    <Typography variant='h6' fontWeight={400}  gutterBottom>Description</Typography>
-                    <TextField multiline rows={4} {...register("description",{required:"Description is required"})}/>
-                </Stack>
+                {/* Product Images Upload */}
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Product Images</label>
+                    <div className="space-y-2">
+                        <input
+                            type="file"
+                            {...register("image0", { required: 'Image 1 is required' })}
+                            className="border border-gray-300 w-full px-3 py-2 rounded-lg"
+                            accept="image/*"
+                        />
+                        <input
+                            type="file"
+                            {...register("image1", { required: 'Image 2 is required' })}
+                            className="border border-gray-300 w-full px-3 py-2 rounded-lg"
+                            accept="image/*"
+                        />
+                        <input
+                            type="file"
+                            {...register("image2", { required: 'Image 3 is required' })}
+                            className="border border-gray-300 w-full px-3 py-2 rounded-lg"
+                            accept="image/*"
+                        />
+                        <input
+                            type="file"
+                            {...register("image3", { required: 'Image 4 is required' })}
+                            className="border border-gray-300 w-full px-3 py-2 rounded-lg"
+                            accept="image/*"
+                        />
+                    </div>
+                </div>
 
-                <Stack flexDirection={'row'}>
-                    <Stack flex={1}>
-                        <Typography variant='h6' fontWeight={400}  gutterBottom>Price</Typography>
-                        <TextField type='number' {...register("price",{required:"Price is required"})}/>
-                    </Stack>
-                    <Stack flex={1}>
-                        <Typography variant='h6' fontWeight={400}  gutterBottom>Discount {is480?"%":"Percentage"}</Typography>
-                        <TextField type='number' {...register("discountPercentage",{required:"discount percentage is required"})}/>
-                    </Stack>
-                </Stack>
-
-                <Stack>
-                    <Typography variant='h6'  fontWeight={400} gutterBottom>Stock Quantity</Typography>
-                    <TextField type='number' {...register("stockQuantity",{required:"Stock Quantity is required"})}/>
-                </Stack>
-                <Stack>
-                    <Typography variant='h6'  fontWeight={400} gutterBottom>Thumbnail</Typography>
-                    <TextField {...register("thumbnail",{required:"Thumbnail is required"})}/>
-                </Stack>
-
-                <Stack>
-                    <Typography variant='h6'  fontWeight={400} gutterBottom>Product Images</Typography>
-
-                    <Stack rowGap={2}>
-   
-                        <TextField {...register("image0",{required:"Image is required"})}/>
-                        <TextField {...register("image1",{required:"Image is required"})}/>
-                        <TextField {...register("image2",{required:"Image is required"})}/>
-                        <TextField {...register("image3",{required:"Image is required"})}/>
-    
-                    </Stack>
-
-                </Stack>
-
-            </Stack>
-
-            {/* action area */}
-            <Stack flexDirection={'row'} alignSelf={'flex-end'} columnGap={is480?1:2}>
-                <Button size={is480?'medium':'large'} variant='contained' type='submit'>Add Product</Button>
-                <Button size={is480?'medium':'large'} variant='outlined' color='error' component={Link} to={'/admin/dashboard'}>Cancel</Button>
-            </Stack>
-
-        </Stack>
-
-    </Stack>
-  )
-}
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-4">
+                    <button type="submit" className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">Add Product</button>
+                    <Link to="/admin/dashboard" className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">Cancel</Link>
+                </div>
+            </form>
+        </div>
+    );
+};
