@@ -34,6 +34,8 @@ export const AddProduct = () => {
 
     const handleAddProduct = (data) => {
         const formData = new FormData();
+        
+        // Append all product fields
         formData.append('title', data.title);
         formData.append('brand', data.brand);
         formData.append('category', data.category);
@@ -42,15 +44,38 @@ export const AddProduct = () => {
         formData.append('discountPercentage', data.discountPercentage);
         formData.append('stockQuantity', data.stockQuantity);
         
-        // Append the file fields for thumbnail and images
-        formData.append('thumbnail', data.thumbnail[0]); // get first selected file
-        formData.append('image0', data.image0[0]);
-        formData.append('image1', data.image1[0]);
-        formData.append('image2', data.image2[0]);
-        formData.append('image3', data.image3[0]);
-
-        dispatch(addProductAsync(formData));
+        // Append the single thumbnail file
+        formData.append('thumbnail', data.thumbnail[0]);
+    
+        // Append multiple images (use the same field name for all images)
+        let len=data.image.length||0;
+        for (let i = 0; i < len; i++) {
+            formData.append('image', data.image[i]); // same key for each image
+        }
+    
+        // Make an API call to the backend to add a product
+        fetch('http://localhost:8000/products', {
+            method: 'POST',
+            body: formData, // formData automatically handles boundary and encoding
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to add product');
+            }
+            return response.json();
+        })
+        .then(() => {
+            // Reset the form, show a success message, and navigate
+            reset();
+            toast.success("New product added");
+            navigate("/admin/dashboard");
+        })
+        .catch((error) => {
+            toast.error("Error adding product, please try again later");
+            console.error('Error:', error);
+        });
     };
+    
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
