@@ -8,7 +8,7 @@ import { selectCategories } from '../../categories/CategoriesSlice';
 import { toast } from 'react-toastify';
 
 export const AddProduct = () => {
-
+ //
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const dispatch = useDispatch();
     const brands = useSelector(selectBrands);
@@ -46,12 +46,11 @@ export const AddProduct = () => {
         
         // Append the single thumbnail file
         formData.append('thumbnail', data.thumbnail[0]);
-    
-        // Append multiple images (use the same field name for all images)
-        let len=data.image.length||0;
-        for (let i = 0; i < len; i++) {
-            formData.append('image', data.image[i]); // same key for each image
-        }
+        formData.append('image1', data.image1[0]);
+        formData.append('image2', data.image2[0]);
+        formData.append('image3', data.image3[0]);
+        formData.append('image4', data.image4[0]);
+        
     
         // Make an API call to the backend to add a product
         fetch('http://localhost:8000/products', {
@@ -187,25 +186,25 @@ export const AddProduct = () => {
                     <div className="space-y-2">
                         <input
                             type="file"
-                            {...register("image0", { required: 'Image 1 is required' })}
+                            {...register("image1", { required: 'Image 1 is required' })}
                             className="border border-gray-300 w-full px-3 py-2 rounded-lg"
                             accept="image/*"
                         />
                         <input
                             type="file"
-                            {...register("image1", { required: 'Image 2 is required' })}
+                            {...register("image2", { required: 'Image 2 is required' })}
                             className="border border-gray-300 w-full px-3 py-2 rounded-lg"
                             accept="image/*"
                         />
                         <input
                             type="file"
-                            {...register("image2", { required: 'Image 3 is required' })}
+                            {...register("image3", { required: 'Image 3 is required' })}
                             className="border border-gray-300 w-full px-3 py-2 rounded-lg"
                             accept="image/*"
                         />
                         <input
                             type="file"
-                            {...register("image3", { required: 'Image 4 is required' })}
+                            {...register("image4", { required: 'Image 4 is required' })}
                             className="border border-gray-300 w-full px-3 py-2 rounded-lg"
                             accept="image/*"
                         />
