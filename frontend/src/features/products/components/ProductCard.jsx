@@ -51,14 +51,15 @@ export const ProductCard = ({ id, title, price, thumbnail, brand, stockQuantity,
                 <img
                     src={thumbnail}
                     alt={`${title} photo unavailable`}
-                    style={{
-                        width: '100%',
+                    // style={{
+                    //    width:"50%",
                         
                        
                       
-                        borderRadius: '8px',
-                        marginBottom: '16px',
-                    }}
+                    //     borderRadius: '8px',
+                    //     marginBottom: '16px',
+                    // }}
+                    className='mb-4 rounded-xl h-[300px]'
                 />
             </Stack>
 
@@ -101,11 +102,12 @@ export const ProductCard = ({ id, title, price, thumbnail, brand, stockQuantity,
                                 padding: '8px 16px',
                                 borderRadius: '4px',
                                 border: 'none',
-                                backgroundColor: theme.palette.primary.main,
+                                // backgroundColor: "red",
                                 color: 'white',
                                 cursor: 'pointer',
                                 fontSize: '0.875rem',
                             }}
+                            className='bg-red-600'
                         >
                             Add To Cart
                         </motion.button>
