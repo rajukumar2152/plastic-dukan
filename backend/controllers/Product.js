@@ -5,7 +5,11 @@ const Product=require("../models/Product")
 exports.create=async(req,res)=>{
     try {
         const thumbnail = req.files.thumbnail[0].filename;
-        const images = req.files.images.map(file => file.filename);
+        const images = [];
+        images.push(req.files.image1[0].filename) ;
+        images.push(req.files.image2[0].filename) ;
+        images.push(req.files.image3[0].filename) ;
+        images.push(req.files.image4[0].filename) ;
         const productObject = {
             ...req.body,
             thumbnail , 
