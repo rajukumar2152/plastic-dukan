@@ -57,10 +57,20 @@ export const Navbar=({isProductList=false})=> {
   return (
     <AppBar position="sticky" sx={{backgroundColor:"white",boxShadow:"none",color:"text.primary"}}>
         <Toolbar sx={{p:1,height:"4rem",display:"flex",justifyContent:"space-around"}}>
-
-          <Typography variant="h6" noWrap component="a" href="/" sx={{ mr: 2, display: { xs: 'none', md: 'flex' },fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none', }}>
-            MERN SHOP
+          {/* <div className='bg-black px-2 py-1 rounded-md'>
+             <Typography variant="h6" noWrap component="a" href="/" sx={{ mr: 2, display: { xs: 'none', md: 'flex' },fontWeight: 700, letterSpacing: '.3rem', color: 'white', textDecoration: 'none', }}>
+            KASHI PLASTIC STORE
           </Typography>
+          </div> */}
+
+        <div className='hidden sm:block bg-black px-2 py-1 rounded-md text-white font-bold text-3xl'>
+            KASHI<span className='text-2xl'>/</span><span className='text-red-600'>PLASTIC</span>
+          
+          </div>
+          <div className='sm:hidden rounded-full bg-green-700 font-extrabold p-2 text-3xl' >
+            <span className='text-white'>K</span><span className='text-2xl'>/</span><span className='text-red-600'>P</span>
+          </div>
+         
 
 
 
