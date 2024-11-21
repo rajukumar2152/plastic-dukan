@@ -19,21 +19,19 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import TuneIcon from '@mui/icons-material/Tune';
 import { selectProductIsFilterOpen, toggleFilters } from '../../products/ProductSlice';
 
-
-
-export const Navbar=({isProductList=false})=> {
+export const Navbar = ({ isProductList = false }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const userInfo=useSelector(selectUserInfo)
-  const cartItems=useSelector(selectCartItems)
-  const loggedInUser=useSelector(selectLoggedInUser)
-  const navigate=useNavigate()
-  const dispatch=useDispatch()
-  const theme=useTheme()
-  const is480=useMediaQuery(theme.breakpoints.down(480))
+  const userInfo = useSelector(selectUserInfo)
+  const cartItems = useSelector(selectCartItems)
+  const loggedInUser = useSelector(selectLoggedInUser)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const theme = useTheme()
+  const is480 = useMediaQuery(theme.breakpoints.down(480))
 
-  const wishlistItems=useSelector(selectWishlistItems)
-  const isProductFilterOpen=useSelector(selectProductIsFilterOpen)
+  const wishlistItems = useSelector(selectWishlistItems)
+  const isProductFilterOpen = useSelector(selectProductIsFilterOpen)
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -43,93 +41,107 @@ export const Navbar=({isProductList=false})=> {
     setAnchorElUser(null);
   };
 
-  const handleToggleFilters=()=>{
+  const handleToggleFilters = () => {
     dispatch(toggleFilters())
   }
 
   const settings = [
-    {name:"Home",to:"/"},
-    {name:'Profile',to:loggedInUser?.isAdmin?"/admin/profile":"/profile"},
-    {name:loggedInUser?.isAdmin?'Orders':'My orders',to:loggedInUser?.isAdmin?"/admin/orders":"/orders"},
-    {name:'Logout',to:"/logout"},
+    { name: "Home", to: "/" },
+    { name: 'Profile', to: loggedInUser?.isAdmin ? "/admin/profile" : "/profile" },
+    { name: loggedInUser?.isAdmin ? 'Orders' : 'My orders', to: loggedInUser?.isAdmin ? "/admin/orders" : "/orders" },
+    { name: 'Logout', to: "/logout" },
   ];
 
   return (
-    <AppBar position="sticky" sx={{backgroundColor:"white",boxShadow:"none",color:"text.primary"}}>
-        <Toolbar sx={{p:1,height:"4rem",display:"flex",justifyContent:"space-around"}}>
-
-          <Typography variant="h6" noWrap component="a" href="/" sx={{ mr: 2, display: { xs: 'none', md: 'flex' },fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none', }}>
-            MERN SHOP
+    <AppBar position="sticky" sx={{ backgroundColor: "white", boxShadow: "none", color: "text.primary" }}>
+      <Toolbar sx={{ p: 1, height: "4rem", display: "flex", justifyContent: "space-around" }}>
+        {/* <div className='bg-black px-2 py-1 rounded-md'>
+             <Typography variant="h6" noWrap component="a" href="/" sx={{ mr: 2, display: { xs: 'none', md: 'flex' },fontWeight: 700, letterSpacing: '.3rem', color: 'white', textDecoration: 'none', }}>
+            KASHI PLASTIC STORE
           </Typography>
+          </div> */}
+        <Link to="/">
+          <div className='hidden sm:block bg-black px-2 py-1 rounded-md text-white font-bold text-3xl'>
+            KASHI<span className='text-2xl'>/</span><span className='text-red-600'>PLASTIC</span>
+
+          </div>
+
+          <div className='sm:hidden rounded-full bg-green-700 font-extrabold p-2 text-3xl' >
+            <span className='text-white'>K</span><span className='text-2xl'>/</span><span className='text-red-600'>P</span>
+          </div>
+        </Link>
 
 
 
-          <Stack flexDirection={'row'} alignItems={'center'} justifyContent={'center'} columnGap={2}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={userInfo?.name} src="null" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
 
-              {
-                loggedInUser?.isAdmin && 
-              
-                <MenuItem  onClick={handleCloseUserMenu}>
-                  <Typography component={Link} color={'text.primary'} sx={{textDecoration:"none"}} to="/admin/add-product" textAlign="center">Add new Product</Typography>
-                </MenuItem>
-              
-              }
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography component={Link} color={'text.primary'} sx={{textDecoration:"none"}} to={setting.to} textAlign="center">{setting.name}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-            <Typography variant='h6' fontWeight={300}>{is480?`${userInfo?.name.toString().split(" ")[0]}`:`Hey👋, ${userInfo?.name}`}</Typography>
-            {loggedInUser.isAdmin && <Button variant='contained'>Admin</Button>}
-            <Stack sx={{flexDirection:"row",columnGap:"1rem",alignItems:"center",justifyContent:"center"}}>
 
-            
+
+        <Stack flexDirection={'row'} alignItems={'center'} justifyContent={'center'} columnGap={2}>
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar alt={userInfo?.name} src="null" />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: '45px' }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+
             {
-            cartItems?.length>0 && 
-            <Badge  badgeContent={cartItems.length} color='error'>
-              <IconButton onClick={()=>navigate("/cart")}>
-                <ShoppingCartOutlinedIcon />
-                </IconButton>
-            </Badge>
+              loggedInUser?.isAdmin &&
+
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography component={Link} color={'text.primary'} sx={{ textDecoration: "none" }} to="/admin/add-product" textAlign="center">Add new Product</Typography>
+              </MenuItem>
+
             }
-            
+            {settings.map((setting) => (
+              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <Typography component={Link} color={'text.primary'} sx={{ textDecoration: "none" }} to={setting.to} textAlign="center">{setting.name}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+          <Typography variant='h6' fontWeight={300}>{is480 ? `${userInfo?.name.toString().split(" ")[0]}` : `Hey👋, ${userInfo?.name}`}</Typography>
+          {loggedInUser.isAdmin && <Button variant='contained'>Admin</Button>}
+          <Stack sx={{ flexDirection: "row", columnGap: "1rem", alignItems: "center", justifyContent: "center" }}>
+
+
+            {
+              cartItems?.length > 0 &&
+              <Badge badgeContent={cartItems.length} color='error'>
+                <IconButton onClick={() => navigate("/cart")}>
+                  <ShoppingCartOutlinedIcon />
+                </IconButton>
+              </Badge>
+            }
+
             {
               !loggedInUser?.isAdmin &&
-                  <Stack>
-                      <Badge badgeContent={wishlistItems?.length} color='error'>
-                          <IconButton component={Link} to={"/wishlist"}><FavoriteBorderIcon /></IconButton>
-                      </Badge>
-                  </Stack>
+              <Stack>
+                <Badge badgeContent={wishlistItems?.length} color='error'>
+                  <IconButton component={Link} to={"/wishlist"}><FavoriteBorderIcon /></IconButton>
+                </Badge>
+              </Stack>
             }
             {
-              isProductList && <IconButton onClick={handleToggleFilters}><TuneIcon sx={{color:isProductFilterOpen?"black":""}}/></IconButton>
+              isProductList && <IconButton onClick={handleToggleFilters}><TuneIcon sx={{ color: isProductFilterOpen ? "black" : "" }} /></IconButton>
             }
-            
-            </Stack>
+
           </Stack>
-        </Toolbar>
+        </Stack>
+      </Toolbar>
     </AppBar>
   );
 }

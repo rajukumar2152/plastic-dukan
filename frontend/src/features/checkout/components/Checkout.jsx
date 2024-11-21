@@ -68,7 +68,7 @@ export const Checkout = () => {
             {/* heading */}
             <Stack flexDirection={'row'} columnGap={is480?0.3:1} alignItems={'center'}>
                 <motion.div  whileHover={{x:-5}}>
-                    <IconButton component={Link} to={"/cart"}><ArrowBackIcon fontSize={is480?"medium":'large'}/></IconButton>
+                    <IconButton component={Link} to={"/"}><ArrowBackIcon fontSize={is480?"medium":'large'}/></IconButton>
                 </motion.div>
                 <Typography variant='h4'>Shipping Information</Typography>
             </Stack>
@@ -178,9 +178,9 @@ export const Checkout = () => {
 
         {/* right box */}
         <Stack  width={is900?'100%':'auto'} alignItems={is900?'flex-start':''}>
-            <Typography variant='h4'>Order summary</Typography>
-            <Cart checkout={true}/>
-            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained' onClick={handleCreateOrder} size='large'>Pay and order</LoadingButton>
+            {/* <Typography variant='h4'>Order summary</Typography> */}
+            {/* <Cart checkout={true}/> */}
+            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained' onClick={handleCreateOrder} size='large'>order</LoadingButton>
         </Stack>
 
     </Stack>

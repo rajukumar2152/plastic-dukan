@@ -29,6 +29,10 @@ export const ProductCard = ({ id, title, price, thumbnail, brand, stockQuantity,
         const data = { user: loggedInUser?._id, product: id };
         dispatch(addToCartAsync(data));
     };
+    const contact=(e)=>{
+        e.stopPropagation();
+        navigate('/checkout');
+    }
 
     return (
         <Paper
@@ -47,15 +51,15 @@ export const ProductCard = ({ id, title, price, thumbnail, brand, stockQuantity,
         >
             {/* Image Section */}
             <Stack>
-                
+
                 <img
                     src={thumbnail}
                     alt={`${title} photo unavailable`}
                     // style={{
                     //    width:"50%",
-                        
-                       
-                      
+
+
+
                     //     borderRadius: '8px',
                     //     marginBottom: '16px',
                     // }}
@@ -112,6 +116,22 @@ export const ProductCard = ({ id, title, price, thumbnail, brand, stockQuantity,
                             Add To Cart
                         </motion.button>
                     )}
+
+                    <button
+                        onClick={contact}
+                        style={{
+                            padding: '8px 16px',
+                            borderRadius: '4px',
+                            border: 'none',
+                            color: 'white',
+                            cursor: 'pointer',
+                            fontSize: '0.875rem',
+                            backgroundColor: 'black', // This sets the background color directly
+                        }}
+                    >
+                        Buy Now
+                    </button>
+
                 </Stack>
 
                 {/* Stock Alert */}

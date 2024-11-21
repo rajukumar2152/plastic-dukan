@@ -11,6 +11,7 @@ import { useFetchLoggedInUserDetails } from "./hooks/useAuth/useFetchLoggedInUse
 import { AddProductPage, AdminOrdersPage, CartPage, CheckoutPage, ForgotPasswordPage, HomePage, LoginPage, OrderSuccessPage, OtpVerificationPage, ProductDetailsPage, ProductUpdatePage, ResetPasswordPage, SignupPage, UserOrdersPage, UserProfilePage, WishlistPage } from './pages';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import ContactForm from './features/checkout/components/Contact';
 
 
 function App() {
@@ -29,11 +30,12 @@ function App() {
         <Route path='/signup' element={<SignupPage/>}/>
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/verify-otp' element={<OtpVerificationPage/>}/>
+        <Route path='/getcontact' element={<ContactForm/>}/>
         <Route path='/forgot-password' element={<ForgotPasswordPage/>}/>
         <Route path='/reset-password/:userId/:passwordResetToken' element={<ResetPasswordPage/>}/>
         <Route exact path='/logout' element={<Protected><Logout/></Protected>}/>
         <Route exact path='/product-details/:id' element={<Protected><ProductDetailsPage/></Protected>}/>
-
+        
         {
           loggedInUser?.isAdmin?(
             // admin routes
@@ -51,6 +53,7 @@ function App() {
             <Route path='/cart' element={<Protected><CartPage/></Protected>}/>
             <Route path='/profile' element={<Protected><UserProfilePage/></Protected>}/>
             <Route path='/checkout' element={<Protected><CheckoutPage/></Protected>}/>
+            
             <Route path='/order-success/:id' element={<Protected><OrderSuccessPage/></Protected>}/>
             <Route path='/orders' element={<Protected><UserOrdersPage/></Protected>}/>
             <Route path='/wishlist' element={<Protected><WishlistPage/></Protected>}/>
