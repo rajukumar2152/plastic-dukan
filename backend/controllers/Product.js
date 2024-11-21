@@ -26,7 +26,7 @@ exports.create=async(req,res)=>{
 
 exports.getAll = async (req, res) => {
     try {
-        const filter={}
+        let filter={}
         const sort={}
         let skip=0
         let limit=0
@@ -55,7 +55,11 @@ exports.getAll = async (req, res) => {
             skip=pageSize*(page-1)
             limit=pageSize
         }
-
+        if(req.query.searchTerm){
+           const regex = new RegExp(req.query.searchTerm, 'i');
+           filter = {...filter ,  title: { $regex: regex } }
+        }
+ 
         const totalDocs=await Product.find(filter).sort(sort).populate("brand").countDocuments().exec()
         const results=await Product.find(filter).sort(sort).populate("brand").skip(skip).limit(limit).exec() 
 
