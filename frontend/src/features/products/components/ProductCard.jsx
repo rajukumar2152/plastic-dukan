@@ -29,10 +29,20 @@ export const ProductCard = ({ id, title, price, thumbnail, brand, stockQuantity,
         const data = { user: loggedInUser?._id, product: id };
         dispatch(addToCartAsync(data));
     };
-    const contact=(e)=>{
+    const contact = (e) => {
         e.stopPropagation();
-        navigate('/checkout');
-    }
+        navigate('/checkout', {
+            state: {
+                id,
+                title,
+                price,
+                thumbnail,
+                brand,
+                stockQuantity,
+            },
+        });
+    };
+    
 
     return (
         <Paper
@@ -94,6 +104,7 @@ export const ProductCard = ({ id, title, price, thumbnail, brand, stockQuantity,
 
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Typography variant="h6" sx={{ color: theme.palette.primary.main }}>
+             
                         {price} Rs
                     </Typography>
 
