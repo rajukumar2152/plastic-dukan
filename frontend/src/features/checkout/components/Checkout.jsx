@@ -19,8 +19,6 @@ export const Checkout = () => {
     const location = useLocation();
     const { price, id ,title} = location.state || {};
 
-    console.log("price hai   ", price, "and id is  ", id);
-
     const status = ''
     const addresses = useSelector(selectAddresses)
     const [selectedAddress, setSelectedAddress] = useState(addresses[0])
@@ -70,14 +68,16 @@ export const Checkout = () => {
         // Create the order payload
         const order = {
             user: loggedInUser?._id,
-            items: cartItems.map((item) => ({
-                productId: item.product._id,
-                quantity: item.quantity,
-            })),
+            product_id:id,
+            product: title,
+            no_of_product_purchased:quantity,
             address: selectedAddress,
             paymentMode: selectedPaymentMethod,
-            total: orderTotal + SHIPPING + TAXES,
+            total_before_tax:price*quantity,
+            total_after_tax: price*quantity + SHIPPING + TAXES,
         };
+
+        console.log(order);
 
         // Send the payload to the backend
         fetch('/api/orders', {
@@ -206,7 +206,11 @@ export const Checkout = () => {
                 <div className='bg-gray-700 text-white text-3xl rounded-md px-4 py-2 font-extrabold hover:bg-red-500 '>
                     You have to pay: <apan px-3>{price*quantity}Rs</apan>  
                 </div>
-                <LoadingButton fullWidth loading={orderStatus === 'pending'} variant='contained' onClick={handleCreateOrder} size='large'>order</LoadingButton>
+
+                <button onClick={handleCreateOrder} className='bg-black text-white text-3xl rounded-md px-4 py-2 font-extrabold hover:bg-red-500 '>
+                    ORDER
+                </button>
+                {/* <LoadingButton className='font-extrabold' fullWidth loading={orderStatus === 'pending'} variant='contained' onClick={handleCreateOrder} size='large'>order</LoadingButton> */}
             </Stack>
 
             {/* right box */}
