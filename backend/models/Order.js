@@ -1,38 +1,44 @@
-const mongoose=require("mongoose")
-const {Schema}=mongoose
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const orderSchema=new Schema({
-    user:{
-        type:Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+const orderSchema = new Schema(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    item:{
-        type:[Schema.Types.Mixed],
-        required:true
+    item: {
+      productId: { type: Schema.Types.ObjectId },
+      price: { type: Number },
     },
-    address:{
-        type:[Schema.Types.Mixed],
-        required:true
+    houseNo: { type: String },
+    sector: { type: String },
+    city: { type: String },
+    phoneNo: { type: String },
+    status: {
+      type: String,
+      enum: ["Pending", "Dispatched", "Out for delivery", "Cancelled"],
+      default: "Pending",
     },
-    status:{
-        type:String,
-        enum:['Pending','Dispatched','Out for delivery','Cancelled'],
-        default:'Pending'
+    paymentMode: {
+      type: String,
+      enum: ["COD", "UPI", "CARD"],
+      required: true,
     },
-    paymentMode:{
-        type:String,
-        enum:['COD','UPI','CARD'],
-        required:true
+    totalquantity: {
+      type: Number,
     },
-    total:{
-        type:Number,
-        required:true
+    totalPrice: {
+      type: Number,
+      required: true,
     },
-    createdAt:{
-        type:Date,
-        default:Date.now
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
-},{versionKey:false})
+  },
+  { versionKey: false }
+);
 
-module.exports=mongoose.model("Order",orderSchema)
+module.exports = mongoose.model("Order", orderSchema);
