@@ -80,7 +80,7 @@ export const Checkout = () => {
         console.log(order);
 
         // Send the payload to the backend
-        fetch('/api/orders', {
+        fetch('http://localhost:800/orders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
